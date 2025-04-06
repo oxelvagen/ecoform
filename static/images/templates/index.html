@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoForm Studio</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <header>
+        <img src="/static/logo/logo.webp" alt="EcoForm Studio logo" class="logo">
+        <h1>EcoForm Studio</h1>
+        <p>Lasergraverat & 3D-printat – med kärlek för form, funktion & hållbarhet.</p>
+    </header>
+    <main class="gallery">
+        {% for image in images %}
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/' + image) }}" alt="Skapelse">
+        </div>
+        {% endfor %}
+    </main>
+</body>
+</html>
