@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <title>Bildhantering – EcoForm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <style>
+        .admin-container { max-width: 800px; margin: 2rem auto; background: #fff; padding: 2rem; border-radius: 12px; }
+        .admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 16px; }
+        .admin-grid img { width: 100%; border-radius: 8px; }
+        form { text-align: center; margin-top: 1rem; }
+        button.delete-btn { background-color: #c0392b; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <h2>Hantera uppladdade bilder</h2>
+        <div class="admin-grid">
+            {% for image in images %}
+            <div>
+                <img src="{{ url_for('static', filename='images/' + image) }}" alt="">
+                <form method="POST" action="/delete" onsubmit="return confirm('Ta bort bilden?')">
+                    <input type="hidden" name="image" value="{{ image }}">
+                    <button type="submit" class="delete-btn">Radera</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+        <p style="text-align:center;margin-top:2rem;"><a href="/">⬅ Tillbaka till galleriet</a></p>
+    </div>
+</body>
+</html>
