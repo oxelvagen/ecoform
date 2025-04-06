@@ -1,1 +1,91 @@
-<h1>Galleri</h1>{% for image in images %}<img src='{{ url_for('static', filename='images/' + image) }}' width='120'>{% endfor %}
+# Återskapa den avancerade index.html-filen med galleri, filter och lightbox
+restored_index_html = """\
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoForm Studio – Portfolio</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>EcoForm Studio</h1>
+        <p>Kreativ verkstad med professionell 3D-print och lasergravyr</p>
+    </header>
+
+    <nav class="filters">
+        <button onclick="filterSelection('all')" class="active">Alla</button>
+        <button onclick="filterSelection('3d')">3D-print</button>
+        <button onclick="filterSelection('laser')">Lasergravyr</button>
+    </nav>
+
+    <main class="gallery">
+        {% for image in images %}
+        <div class="card filter-item {{ image.split('_')[0] }}">
+            <img src="{{ url_for('static', filename='images/' + image) }}" alt="Projektbild" onclick="openLightbox(this)">
+            <div class="caption">{{ image.split('_')[1].rsplit('.',1)[0].replace('-', ' ') }}</div>
+        </div>
+        {% endfor %}
+    </main>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="close">&times;</span>
+        <img id="lightbox-img" src="" alt="">
+        <p id="lightbox-caption"></p>
+    </div>
+
+    <section class="equipment">
+        <h2>Vår utrustning</h2>
+        <ul>
+            <li><strong>Bambu Lab A1 Carbon med AMS</strong> – högpresterande flerfärgsskrivare med auto-materialväxlare.</li>
+            <li><strong>Bambu Lab A1 med AMS</strong> – exakt, snabb och idealisk för färgglada projekt.</li>
+            <li><strong>Creality 3D-skrivare</strong> – pålitlig maskin för större och specialanpassade utskrifter.</li>
+            <li><strong>CO2-laser</strong> – kraftfull laser för gravyr i trä, skiffer, akryl och mer.</li>
+            <li><strong>Vinylpress & Sublimering</strong> – för tryck på tröjor, muggar m.m.</li>
+        </ul>
+    </section>
+
+    <section class="contact">
+        {% if success %}<p class="success-msg">Tack! Vi återkommer till dig så snart som möjligt.</p>{% endif %}
+        <h2>Kontakta oss</h2>
+        <form method="POST">
+            <input type="text" name="name" placeholder="Namn" required>
+            <input type="email" name="email" placeholder="E-post" required>
+            <textarea name="message" placeholder="Meddelande" required></textarea>
+            <button type="submit">Skicka</button>
+        </form>
+    </section>
+
+    <script>
+        function filterSelection(category) {
+            let items = document.getElementsByClassName("filter-item");
+            for (let i = 0; i < items.length; i++) {
+                if (category === "all" || items[i].classList.contains(category)) {
+                    items[i].style.display = "block";
+                } else {
+                    items[i].style.display = "none";
+                }
+            }
+            document.querySelectorAll("nav.filters button").forEach(btn => btn.classList.remove("active"));
+            event.target.classList.add("active");
+        }
+
+        function openLightbox(imgElement) {
+            document.getElementById("lightbox").style.display = "flex";
+            document.getElementById("lightbox-img").src = imgElement.src;
+            document.getElementById("lightbox-caption").textContent = imgElement.nextElementSibling.textContent;
+        }
+
+        function closeLightbox() {
+            document.getElementById("lightbox").style.display = "none";
+        }
+    </script>
+</body>
+</html>
+"""
+
+with open("/mnt/data/ecoform_portfolio_complete/templates/index.html", "w") as f:
+    f.write(restored_index_html)
